@@ -77,3 +77,6 @@
     - `config`: Config file for the respository. This is where git settings are specified for the relevant repository
     - `index`: Where information pertaining to the next commit is stored. This is where the state of files added with `git add` are stored
     - `logs/`: Stores logs for git operation
+- .gitignore
+  - Paths input into this file are excluded from tracking
+    - As an example, this repo contains a file called `ignoreme.txt`. Since it is added to .gitignore, any changes to that file should not be tracked and therefore the file should not be uploaded to the repo.
