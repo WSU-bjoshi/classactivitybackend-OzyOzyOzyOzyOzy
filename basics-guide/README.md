@@ -80,3 +80,62 @@
 - .gitignore
   - Paths input into this file are excluded from tracking
     - As an example, this repo contains a file called `ignoreme.txt`. Since it is added to .gitignore, any changes to that file should not be tracked and therefore the file should not be uploaded to the repo.
+
+## Command line Docker
+
+- ps
+  - Lists containers
+    - Without a flag, `docker ps` only lists running containers. Use `docker ps -a` to list all containers that exist
+  - `docker ps`, `docker ps -a`
+- images
+  - Manages images
+    - Must be used with an option
+  - Examples:
+```
+# add image ubuntu:latest
+docker images add ubuntu:latest
+
+# remove image ubuntu:latest
+docker images rm ubuntu:latest
+
+# list installed images
+docker images ls
+```
+- run
+  - Create and run a new container from a image 
+  - Examples:
+```
+# Create and run a container with a interactive shell
+docker run -it [IMAGE]
+
+# Create a container and publish specific port to host
+docker run -p containerport:hostport [NAME]
+
+# Create and run a container with a specified name
+docker run --name [NAME] [IMAGE]
+```
+- start
+  - Start specified container
+  - `docker start myContainer`
+- stop
+  - Stop specified container
+  - `docker stop myContainer`
+- exec
+  - Alias for `docker container exec`
+  - Executes a command in a specified container
+  - `docker exec -it veryImportantContainer sh -c "rm -rf /*"` 
+- import
+  - Imports a container from a container archive
+  - `docker import stuff.tar`
+- export
+  - Exports a container into a compressed archive
+  - `docker export veryImportantContainer -o container.tar`
+- kill
+  - Terminates specified container
+  - `docker kill veryImportantContainer`
+- rm
+  - Removes/deletes a container and its contents
+  `docker rm veryImportantContainer
+  - include removing a container versus removing an image
+  - To remove an image
+  - `docker images rm image:name`
