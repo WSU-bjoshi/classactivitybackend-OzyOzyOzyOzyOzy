@@ -139,3 +139,29 @@ docker run --name [NAME] [IMAGE]
   - include removing a container versus removing an image
   - To remove an image
   - `docker images rm image:name`
+
+## SSH
+
+Provide basic how-to-use guides.  This should be short and sweet so that you can refer to it as a quick guide.
+
+- Setting up SSH authentication to GitHub repositories
+  - Generate key pair using `ssh-keygen`
+  - Upload private key to github under account settings, SHH & GPG keys
+  - Follow github documentation on how to add github as a host (only necessary on Mac)
+ 
+- Setting up SSH authentication and using SSH to connect to an AWS instance
+  - On AWS main console, download PEM from SSH Keys section
+  - Under EC2 console, assign a elastic IP to your running instance (Assuming you have already made a container, If not, do that).
+  - Use the downloaded key in your ssh command to connect to running instance
+    `ssh -i AWS.pem [USER]@[AWS Elastic IP]`
+- Using the `config` file in the `.ssh` folder
+  - To add a host to the ssh config file, the format is as follows:
+```
+Host [A_Name_For_The_Host]
+    HostName [HostIP]
+    User [USER]
+    Port [PORT]
+    IdentityFile [path/to/key/for/ssh]
+```
+  - Use this as a rough template for easier access to a host. For AWS, you can set this up to only need `ssh AWS3120` for our 3120 instance.
+
