@@ -36,7 +36,14 @@
   - `git commit`
   - **DEMONSTRATE** Your GitHub repo should have a commit history of more than one.  Commit messages should state changes at points in time
 - push
+  - Pushes commits to the currently entered repo or branch
+    - Requires at least one previous commit
+  - `git push`
 - pull
+  - Pulls changes from a remote repository to the local repository
+    - Scans for file and path differences within the entered repository
+    - Will add or change conflicting files to match the remote repository
+  - `git pull`
 - branch
   - **DEMONSTRATE** Your GitHub repo should have more than the `main` branch.  We can switch to the other branch and see content that may not be synced to `main`
 - checkout
