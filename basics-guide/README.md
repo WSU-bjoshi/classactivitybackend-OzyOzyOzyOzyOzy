@@ -45,10 +45,24 @@
     - Will add or change conflicting files to match the remote repository
   - `git pull`
 - branch
+  - Manges branches for entered repository
+    - Without options, will display all current branches and designate which branch is currently entered
   - **DEMONSTRATE** Your GitHub repo should have more than the `main` branch.  We can switch to the other branch and see content that may not be synced to `main`
+  - `git branch [options]`
 - checkout
+  - Switches current branch or restores working tree files
+  - `git checkout [options]`
 - fetch
+  - Downloads objects and refs from another repository
+  - `git fetch "repository_to_fetch"`
 - merge
+  - Merges changes from a branch to the main branch of a repo
+    - Multiple branches can be merged at once
+    - Should changes conflict, i.e the same file has modifications from the origin of branch to the merge, the merge cannot be completed until the merge conflicts are resolved
   - **DEMONSTRATE** Your commit history should reflect a point where a merge was made from a different branch. Make sure the commit message contains some indication that the merge happened in the given commit
+  - `git merge [options] "branch"`
 - init
-  - separately note how to initializing and existing folder versus create a bare repository
+  - Creates an empty repository or reinitializes an existing one
+    - To initiate an existing directory as a git repository, cd into the directory containing the project, then `git init`. After the directory has been initialized `git add *`, `git commit`.
+    - The --bare flag initializes a bare repository with no working tree. `git init --bare`
+  - `git init [options]`
