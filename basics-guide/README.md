@@ -34,7 +34,6 @@
     - Requires a small message to explain what was changed
     - Changes are not made to repo until `git push` is used
   - `git commit`
-  - **DEMONSTRATE** Your GitHub repo should have a commit history of more than one.  Commit messages should state changes at points in time
 - push
   - Pushes commits to the currently entered repo or branch
     - Requires at least one previous commit
@@ -47,7 +46,6 @@
 - branch
   - Manges branches for entered repository
     - Without options, will display all current branches and designate which branch is currently entered
-  - **DEMONSTRATE** Your GitHub repo should have more than the `main` branch.  We can switch to the other branch and see content that may not be synced to `main`
   - `git branch [options]`
 - checkout
   - Switches current branch or restores working tree files
