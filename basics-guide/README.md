@@ -1,0 +1,47 @@
+## Command Line Git
+- status
+  - Shows status of the local repository. This status includes:
+    - number of local commits that have not been synced with remote (GitHub)
+    - list of files in local folder than are NOT being tracked by git
+    - list of files in local folder that have changes that need to be committed
+  - `git status`
+- log
+  - Displays a history of recent commits. This log includes:
+    - Authors
+    - Date of changes
+    - Commit messages
+  - `git log`
+- clone
+  - Clones a supplied repository (if you have access)
+    - Private repos require a matching key for authentication
+  - `git clone [respository link`
+- remote
+  - Manage a set of tracked repositories. Without options, this command displays currently tracked repositories
+  - `git remote`
+- add
+  - Adds files for staging/tracking
+    - Files can be specifically selected by entering the file or folder name
+    - All files in a repo can be selected with `*`
+  - `git add "file"`
+- rm
+  - Removes a file from tracking. `rm` can only removes files from paths known to git.
+    - To remove a file from the working directory (as in actually delete it) use /bin/rm
+    - `git rm` only removes files from git, NOT the actual working directory
+  - `git rm [options]`
+- commit
+  - Stages changes to files that have been added with `git add` to be pushed to the repository
+    - Tracks all files that are not in `.gitignore`
+    - Requires a small message to explain what was changed
+    - Changes are not made to repo until `git push` is used
+  - `git commit`
+  - **DEMONSTRATE** Your GitHub repo should have a commit history of more than one.  Commit messages should state changes at points in time
+- push
+- pull
+- branch
+  - **DEMONSTRATE** Your GitHub repo should have more than the `main` branch.  We can switch to the other branch and see content that may not be synced to `main`
+- checkout
+- fetch
+- merge
+  - **DEMONSTRATE** Your commit history should reflect a point where a merge was made from a different branch. Make sure the commit message contains some indication that the merge happened in the given commit
+- init
+  - separately note how to initializing and existing folder versus create a bare repository
