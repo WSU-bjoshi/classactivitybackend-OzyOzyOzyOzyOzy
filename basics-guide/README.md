@@ -66,3 +66,14 @@
     - To initiate an existing directory as a git repository, cd into the directory containing the project, then `git init`. After the directory has been initialized `git add *`, `git commit`.
     - The --bare flag initializes a bare repository with no working tree. `git init --bare`
   - `git init [options]`
+
+## git files & folders
+
+- .git folder
+  - Contains `objects/`, `refs/`, `HEAD`, `config`, `index`, `logs/`
+    - `objects/`: Stores all content of the repo
+    - `refs/`: Stores references to commits (branches and tags)
+    - `HEAD`: Points to the currently active branch or commit
+    - `config`: Config file for the respository. This is where git settings are specified for the relevant repository
+    - `index`: Where information pertaining to the next commit is stored. This is where the state of files added with `git add` are stored
+    - `logs/`: Stores logs for git operation
