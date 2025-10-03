@@ -8,8 +8,8 @@ For each step below, provide
 You may add whatever additional notes you would like. Getting a good screenshot can be done by clicking on the resource and showing configurations in the details menu.
 
 1. Create a **VPC**
-   - Tag the "Name" with "YOURLASTNAME-VPC"
-   - Specify a CIDR block of `192.168.0.0/23`
+   -A VPC in AWS is a virtual network. It serves as the base for all AWS networks that you create.
+![AWS VPC](images/Project1/AWSVPC.png)
 2. Create a **Subnet**
    - Tag the "Name" with "YOURLASTNAME-Subnet"
    - Reserve `192.168.0.0 - 192.168.0.255` for use on this subnet
