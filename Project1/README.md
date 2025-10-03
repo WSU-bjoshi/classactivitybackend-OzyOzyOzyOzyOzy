@@ -1,4 +1,4 @@
-## Part 1 - Build a VPC
+
 
 For each step below, provide 
    - a description of what the resource does (what is its role).
@@ -8,21 +8,17 @@ For each step below, provide
 You may add whatever additional notes you would like. Getting a good screenshot can be done by clicking on the resource and showing configurations in the details menu.
 
 1. Create a **VPC**
-   -A VPC in AWS is a virtual network. It serves as the base for all AWS networks that you create.
+   - A VPC in AWS is a virtual network. It serves as the base for all AWS networks that you create.
 ![AWS VPC](images/Project1/AWSVPC.png)
 2. Create a **Subnet**
-   - Tag the "Name" with "YOURLASTNAME-Subnet"
-   - Reserve `192.168.0.0 - 192.168.0.255` for use on this subnet
-   - Attach it to your VPC
-   - Document the reserved block for the subnet **and** the remaining block(s) available in VPC
+   - Subnets in AWS work the exact same as they do in physical networks. In AWS, subnets attached to the same VPC can talk to each other directly. A subnet is a reserved set of addresses for use in a network. Generally used for organizational or security purposes.
+![AWS VPC](images/Project1/subnet.png)
 3. Create an **Internet Gateway**
-   - Tag the "Name" with "YOURLASTNAME-gw"
-   - Attach it to your VPC
+   - Internet gateways expose your AWS networks to the internet. They are the internet source part of the network.
+![AWS VPC](images/Project1/awsgw.png)
 4. Create a **Route Table**
-   - Tag the "Name" with "YOURLASTNAME-rt"
-   - Attach it to your VPC
-   - Associate it with your subnet
-   - Add a routing table rule that sends traffic to destinations external to your subnet CIDR block to your internet gateway
+   - Routing tables route specified traffic to specified addresses based on a set of rules called "routes".
+![AWS VPC](images/Project1/awsrt.png)
 5. Create a **Security Group**
    - Tag the "Name" with "YOURLASTNAME-sg"
    - Allow SSH for a set of trusted source networks including:
