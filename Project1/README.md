@@ -1,20 +1,20 @@
 1. Create a **VPC**
-![AWS VPC](images/Project1/AWSVPC.png)
+![AWS VPC](/images/Project1/AWSVPC.png)
 2. Create a **Subnet**
    - Subnets in AWS work the exact same as they do in physical networks. In AWS, subnets attached to the same VPC can talk to each other directly. A subnet is a reserved set of addresses for use in a network. Generally used for organizational or security purposes.
-![AWS Subnet](images/Project1/subnet.png)
+![AWS Subnet](/images/Project1/subnet.png)
 3. Create an **Internet Gateway**
    - Internet gateways expose your AWS networks to the internet. They are the internet source part of the network.
-![AWS Internate Gateway](images/Project1/awsgw.png)
+![AWS Internate Gateway](/images/Project1/awsgw.png)
 4. Create a **Route Table**
    - Routing tables route specified traffic to specified addresses based on a set of rules called "routes".
-![AWS Route Table](images/Project1/awsrt.png)
+![AWS Route Table](/images/Project1/awsrt.png)
 5. Create a **Security Group**
    - Security groups are essentially firewalls for your AWS network. They contain a list of rules to enable/disable certain traffic. By default they allow all traffic in or out.
-![AWS Security Group](images/Project1/awssg.png)
+![AWS Security Group](/images/Project1/awssg.png)
 6. Modify or create a **Network ACL**
    - Network ACLs function as a firewall for a specific subnet.      
-![AWS Network ACL](images/Project1/awssg.png)
+![AWS Network ACL](/images/Project1/awssg.png)
 7. Identify OR create a **Key Pair**
    - Key pairs are used to securely connect to a device. The private key is encrypted and stored on the server/instance, while the public key is distributed to those who need to connect. For this AWS setup, I will be generating a keypair named ceg3120.
 8. Reserve an **Elastic IP address**. 
@@ -41,7 +41,7 @@
 In EC2 management: select Elastic IP's > Select your elastic IP > Actions > Associate Elastic IP Address. Under the Associate Elastic IP Address menu, select the instance you want to associate to the elastic IP and the private IP address you would like associated to the instance.
 
 3. AWS Instance Screenshot. 
-![AWS Instance](images/Project1/instance.png)
+![AWS Instance](/images/Project1/instance.png)
 
 ## Part 3 - Instance Configuration
 
@@ -54,12 +54,12 @@ For each step below, provide a description of steps to complete the tasks and an
 2. Change the hostname to "YOURLASTNAME-AMI" where YOURLASTNAME is your last name and where AMI is some identifier of the AMI you chose. 
    - All that needs done is to change /etc/hostname with sudo privleges. Use your preferred text editor. After file has been saved, reboot the instance.
 3. Create a **screenshot of your `ssh` connection to your instance** and add it to your project write up - make sure it shows your new hostname in the CLI prompt.
-![AWS Instance w/ hostname change](images/Project1/hostname.png)
+![AWS Instance w/ hostname change](/images/Project1/hostname.png)
 4. Prove with trial descriptions & screenshots that your Network ACL and Security Group are allowing or blocking traffic per your configurations.
 As seen in the above screenshot, the instance as able to install `neofetch` which means that the instance can contact ubuntu update servers.
 
 The following screenshot will show how the instance can not contact `wttr.in`
-![AWS Instance not talking](images/Project1/wttr.png)
+![AWS Instance not talking](/images/Project1/wttr.png)
 5. Install `docker` per instructions for the AMI you chose.
 Go to docker documentation and install using docker's apt repository
 ```
