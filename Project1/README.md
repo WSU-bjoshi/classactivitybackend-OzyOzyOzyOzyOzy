@@ -1,4 +1,5 @@
 1. Create a **VPC**
+   - An AWS VPC is the base that your network is built on. It is essentially a divison of the region you choose to make your network in, except you control its settings rather than AWS.
 ![AWS VPC](/images/Project1/AWSVPC.png)
 2. Create a **Subnet**
    - Subnets in AWS work the exact same as they do in physical networks. In AWS, subnets attached to the same VPC can talk to each other directly. A subnet is a reserved set of addresses for use in a network. Generally used for organizational or security purposes.
