@@ -1,44 +1,24 @@
-
-
-For each step below, provide 
-   - a description of what the resource does (what is its role).
-   - responses to additional requests for information in any step.
-   - a screenshot that shows the resource has been created according to specification  
-   
-You may add whatever additional notes you would like. Getting a good screenshot can be done by clicking on the resource and showing configurations in the details menu.
-
 1. Create a **VPC**
-   - A VPC in AWS is a virtual network. It serves as the base for all AWS networks that you create.
 ![AWS VPC](images/Project1/AWSVPC.png)
 2. Create a **Subnet**
    - Subnets in AWS work the exact same as they do in physical networks. In AWS, subnets attached to the same VPC can talk to each other directly. A subnet is a reserved set of addresses for use in a network. Generally used for organizational or security purposes.
-![AWS VPC](images/Project1/subnet.png)
+![AWS Subnet](images/Project1/subnet.png)
 3. Create an **Internet Gateway**
    - Internet gateways expose your AWS networks to the internet. They are the internet source part of the network.
-![AWS VPC](images/Project1/awsgw.png)
+![AWS Internate Gateway](images/Project1/awsgw.png)
 4. Create a **Route Table**
    - Routing tables route specified traffic to specified addresses based on a set of rules called "routes".
-![AWS VPC](images/Project1/awsrt.png)
+![AWS Route Table](images/Project1/awsrt.png)
 5. Create a **Security Group**
-   - Tag the "Name" with "YOURLASTNAME-sg"
-   - Allow SSH for a set of trusted source networks including:
-     - Your home / where you usually connect to your instances from
-     - Wright State (addresses in CIDR block 130.108.0.0/16)
-     - Instances within the VPC
-   - Attach it to your VPC
-   - Make sure screenshot includes content of the Inbound rules
+   - Security groups are essentially firewalls for your AWS network. They contain a list of rules to enable/disable certain traffic. By default they allow all traffic in or out.
+![AWS Security Group](images/Project1/awssg.png)
 6. Modify or create a **Network ACL**
-   - Tag the "Name" with "YOURLASTNAME-nacl"
-   - Affirm association or associate resource with the subnet
-   - Verify that for Inbound & Outbound there is a rule that `Allow`s any IP (v4 only is sufficient) on all ports
-     - If this rule does not exist, you'll need to create it.  Created Network ACL's are `Deny` all traffic on all ports, Inbound and Outbound, by default.
-   - Deny outbound connections to any port on [wttr.in](https://wttr.in/)
+   - Network ACLs function as a firewall for a specific subnet.      
+![AWS Network ACL](images/Project1/awssg.png)
 7. Identify OR create a **Key Pair**
-   - Document how the public and private keys of a key pair are stored.
+   - Key pairs are used to securely connect to a device. The private key is encrypted and stored on the server/instance, while the public key is distributed to those who need to connect. For this AWS setup, I will be generating a keypair named ceg3120.
 8. Reserve an **Elastic IP address**. 
-   - Tag the "Name" with "YOURLASTNAME-EIP". 
-   - Document the difference between an Elastic IP and a Public IP.
-
+   - In AWS, an elastic IP is an assigned IP you use to ssh into your instances. It will always remain the same. The public IP can change due to the shear amount of connections AWS uses. The elastic IP is basically an alias IP to allow you to always connect to the "same" IP.
 ## Part 2 - EC2 Instance Creation
 
 This part will focus on configuring an instance in your VPC.
@@ -48,11 +28,12 @@ For each step below, provide a description of steps to complete the tasks (scree
 Note: these steps are ordered based on the "Launch Instances" wizard.
 
 1. Create a new **Instance**. In addition to describing what an instance is and how-to launch a new one, find and document the following information about the instance you have built:
-   - AMI selected - AMI id & OS with version
-   - default username of the instance type selected
-   - instance type selected 
-   - keypair selected
-   - describe why you need to select a keypair
+   - Description: An instance is essentially a virtual machine that AWS hosts on their servers. It can use any image that you provide. For this example, I will be building a basic Ubuntu instance.
+   - AMI selected:  Ubuntu 24.04 LTS ID = `ami-0360c520857e3138f`
+   - default username of the instance type selected:  Ubuntu
+   - instance type selected:  t3.small 
+   - keypair selected: ceg3120
+   - describe why you need to select a keypair:  Without a keypair assigned to the instance, you will be unable to ssh into the instance.
    - the how-to launch an instance instructions should include coverage on how-to:
       - Attach the instance to your subnet within your VPC
       - Associate your security group, "YOURLASTNAME-sg" to your instance.
