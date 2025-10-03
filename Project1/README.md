@@ -21,12 +21,6 @@
    - In AWS, an elastic IP is an assigned IP you use to ssh into your instances. It will always remain the same. The public IP can change due to the shear amount of connections AWS uses. The elastic IP is basically an alias IP to allow you to always connect to the "same" IP.
 ## Part 2 - EC2 Instance Creation
 
-This part will focus on configuring an instance in your VPC.
-
-For each step below, provide a description of steps to complete the tasks (screenshots not required) and any additional documentation required by the step.
-
-Note: these steps are ordered based on the "Launch Instances" wizard.
-
 1. Create a new **Instance**. In addition to describing what an instance is and how-to launch a new one, find and document the following information about the instance you have built:
    - Description: An instance is essentially a virtual machine that AWS hosts on their servers. It can use any image that you provide. For this example, I will be building a basic Ubuntu instance.
    - AMI selected:  Ubuntu 24.04 LTS ID = `ami-0360c520857e3138f`
@@ -34,13 +28,20 @@ Note: these steps are ordered based on the "Launch Instances" wizard.
    - instance type selected:  t3.small 
    - keypair selected: ceg3120
    - describe why you need to select a keypair:  Without a keypair assigned to the instance, you will be unable to ssh into the instance.
-   - the how-to launch an instance instructions should include coverage on how-to:
-      - Attach the instance to your subnet within your VPC
-      - Associate your security group, "YOURLASTNAME-sg" to your instance.
-      - Attach a volume to your instance. 
-      - Tag your instance with a "Name" of "YOURLASTNAME-instance". 
+
+###How to launch an AWS instance
+     1. Under EC2 Console, Click `Luanch Instance`
+     2. Select image (AMI)
+     3. Configure network settings. The instance will by default select the amazon default VPC.
+     4. After selecting the desired VPC, you may select your subnet and security group.
+     5. At the bottom of the setup page, select your volume type and size. The storage will automatically be attached to the instance on creation.
+     6. The instance can be tagged by selecting the instance name > tags > Manage tags.
+
 2. Associate the Elastic IP with your instance.
-3. Create a **screenshot of your instance details** after instance has been launched and add it to your project write up. 
+In EC2 management: select Elastic IP's > Select your elastic IP > Actions > Associate Elastic IP Address. Under the Associate Elastic IP Address menu, select the instance you want to associate to the elastic IP and the private IP address you would like associated to the instance.
+
+3. AWS Instance Screenshot. 
+![AWS Instance](images/Project1/instance.png)
 
 ## Part 3 - Instance Configuration
 
@@ -48,12 +49,33 @@ This part will focus on configurations and tests once you `ssh` in to your insta
 
 For each step below, provide a description of steps to complete the tasks and any additional documentation required by the step.
 
-1. `ssh` in to your instance. 
+1. `ssh` in to your instance.
+    `ssh -i /path/to/key/file "HOSTNAME"@"ELASTIC_IP"` 
 2. Change the hostname to "YOURLASTNAME-AMI" where YOURLASTNAME is your last name and where AMI is some identifier of the AMI you chose. 
-   - Notes on changing a system hostname: 
-      1. It is wise to copy config files you are about to change to filename.old For `/etc/hostname`, for example, I would first copy the current `hostname` file to `/etc/hostname.old`
-      2. You should not change permissions on any files you are modifying. They are system config files. You may need to access them with administrative privileges.
-      3. Here is a helpful resource: https://www.tecmint.com/set-hostname-permanently-in-linux/ I did not modify `/etc/hosts` on mine - do so or not as you wish.
+   - All that needs done is to change /etc/hostname with sudo privleges. Use your preferred text editor. After file has been saved, reboot the instance.
 3. Create a **screenshot of your `ssh` connection to your instance** and add it to your project write up - make sure it shows your new hostname in the CLI prompt.
+![AWS Instance w/ hostname change](images/Project1/hostname.png)
 4. Prove with trial descriptions & screenshots that your Network ACL and Security Group are allowing or blocking traffic per your configurations.
+As seen in the above screenshot, the instance as able to install `neofetch` which means that the instance can contact ubuntu update servers.
+
+The following screenshot will show how the instance can not contact `wttr.in`
+![AWS Instance not talking](images/Project1/wttr.png)
 5. Install `docker` per instructions for the AMI you chose.
+Go to docker documentation and install using docker's apt repository
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+Lastly, verify installation by running `sudo docker run hello-world`
