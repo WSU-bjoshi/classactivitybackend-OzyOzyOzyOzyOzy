@@ -1,0 +1,1 @@
+Test website was generated with ChatGPT with the prompt "Can you generate me a sample website with two separate html files and a css file? This is just for testing a web server. It needs no specific themeing"
