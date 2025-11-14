@@ -49,7 +49,7 @@ Host "name of host"
 This will allow you to ssh into the host by just typing 'ssh "name of host"` making it much quicker to ssh into a host.
 
 # Setting up the HAProxy load balancing instance
-###Purpose and required location of HAProxy config
+### Purpose and required location of HAProxy config
 The HAProxy config file dictates how HAProxy runs and handles traffic.
 
 ### Link to HAProxy config
@@ -62,7 +62,7 @@ The HAProxy config file dictates how HAProxy runs and handles traffic.
 -listen stats: This section contains the contents and configuration for the stats page.
 
 ### How to test config without restarting HAProxy
-`haproxy -c -f /etc/haproxy/haproxy.cfg` with test the configuration to ensure it is valid as according to the required syntax for HAProxy. For testing of actual configuration changes, such as changing the address of a host, you will need to either set up a separate test environment from production or restart the haproxy service to have the changes apply.
+`haproxy -c -f /etc/haproxy/haproxy.cfg` will test the configuration to ensure it is valid as according to the required syntax for HAProxy. For testing of actual configuration changes, such as changing the address of a host, you will need to either set up a separate test environment from production or restart the haproxy service to have the changes apply.
 
 ### Scenarios for control of HAProxy
 HAProxy is primarily controlled with `systemctl`. HAProxy only needs restarted when changes are made to the config file. HAProxy will not automatically apply changes without a restart. The command to restart is `systemctl restart haproxy`. You will more than likely need sudo priveleges. To start or stop the HAProxy service, such as for maintenance, use `systemctl start/stop haproxy`.
