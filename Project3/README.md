@@ -82,5 +82,5 @@ In this screenshot, there are multiple active sessions. You can see under Sessio
 
  
 # Citations
--Test website was generated with ChatGPT with the prompt "Can you generate me a sample website with two separate html files and a css file? This is just for testing a web server. It needs no specific themeing"
--Docker Docs for syntax of uploading images to docker hub. https://docs.docker.com/reference/cli/docker/image/push/
+- Test website was generated with ChatGPT with the prompt "Can you generate me a sample website with two separate html files and a css file? This is just for testing a web server. It needs no specific themeing"
+- Docker Docs for syntax of uploading images to docker hub. https://docs.docker.com/reference/cli/docker/image/push/
