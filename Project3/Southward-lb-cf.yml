@@ -5,18 +5,19 @@ Parameters:
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
     Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: ceg3120
     ConstraintDescription: must be the name of an existing EC2 KeyPair.
   # Removed SSH location, it's useless
 Mappings:
   AWSRegionAMI: # AMI for Ubuntu server in each supported region 
     us-east-1:   # N. Virginia
-    # AMI ID for Ubuntu 20 (ubuntu + apt) - Amazon Linux 2 AMI ami-02e136e904f3da870 (ec2-user + yum)
-      HVM64: ami-09e67e426f25ce0d7 # TODO use AMI ID of choice
+    # AMI ID for Ubuntu 24.04lts
+      HVM64: ami-0360c520857e3138f # TODO use AMI ID of choice
 Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: 10.0.0.0/16 # TODO: check CIDR block
+      CidrBlock: 192.168.0.0/23
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -26,7 +27,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.0.0/24 # TODO: take note of the subnet range
+      CidrBlock: 192.168.0.0/24
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -36,7 +37,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.1.0/24 # TODO: take note of the subnet range
+      CidrBlock: 192.168.1.0/24
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -128,16 +129,31 @@ Resources:
         - IpProtocol: tcp
           FromPort: '22'
           ToPort: '22'
-          CidrIp: 10.0.0.0/16 #TODO: update to refer to correct VPC block
+          CidrIp: 192.168.0.0/23 #VPC CIDR
         - IpProtocol: tcp
           FromPort: '22'
           ToPort: '22'
-          CidrIp: 130.108.0.0/16  # WSU CIDR
+          CidrIp: 130.108.0.0/16  # WSU/Home CIDR
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/32  # TODO Replace with home / trusted public IP
-          # TODO add rule(s) for port 80 access
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 192.168.1.0/24  # HTTP within VPC
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0  # HTTP From anywhere
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIP: 192.168.1.0/24 # HTTPS within VPC
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIP: 0.0.0.0/0 # HTTPS from anywhere
+        - IpProtocol: tcp
+          FromPort: 9000
+          ToPort: 9000
+          CidrIp: 130.108.0.0/16
       Tags: 
         - Key: Name
           Value: LB-sg
@@ -159,15 +175,55 @@ Resources:
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref PublicSubnet
-          PrivateIpAddress: 10.0.0.10 # TODO - must be valid for public subnet
+          PrivateIpAddress: 192.168.0.10 # TODO - must be valid for public subnet
       UserData:
         Fn::Base64:
           !Sub |
             #!/bin/bash -xe
             apt-get update && \
             # TODO need to install haproxy
+            apt-get install haproxy -y
             apt-get install -y git && \
-            hostnamectl set-hostname proxy && \
+            systemctl enable --now haproxy && \
+            
+            cat << 'EOF' > /etc/haproxy/haproxy.cfg
+            global
+            log /dev/log local0
+            log /dev/log local1 notice
+            daemon
+            maxconn 2048
+
+            defaults
+            mode http
+            log global
+            option httplog
+            option dontlognull
+            timeout connect 5s
+            timeout client 50s
+            timeout server 50s
+
+            frontend Southward-frontend
+            bind *:80
+            mode http
+            default_backend Southward-pool
+
+            backend Southward-pool
+            balance roundrobin
+            server host1 192.168.1.10:80 check
+            server host2 192.168.1.11:80 check
+            server host3 192.168.1.12:80 check
+
+            listen stats
+            bind *:9000
+            stats enable
+            stats uri /stats
+            stats refresh 10s
+            stats realm Haproxy\ Statistics
+            EOF
+            
+            systemctl restart haproxy
+            echo "SOUTHWARD-Proxy" > /etc/hostname && \
+
             reboot
   WebServ1Instance:
     Type: 'AWS::EC2::Instance'
@@ -188,15 +244,107 @@ Resources:
           DeviceIndex: '0'
           DeleteOnTermination: 'true'
           SubnetId: !Ref PrivateSubnet
-          PrivateIpAddress: 10.0.1.10 # TODO - must be valid for the private subnet
+          PrivateIpAddress: 192.168.1.10 
       UserData:
         Fn::Base64:
           !Sub |
             #!/bin/bash -xe
-            apt-get update && \
-            # TODO install docker
-            apt-get install -y git && \
-            # TODO give it a hostname - hostnamectl  && \
-            # TODO pull & run your website container
-            reboot
-# TODO: create 2 more instances attached to the private subnet
+
+            # Update package index
+            apt-get update -y
+
+            # Install Docker
+            apt-get install -y docker.io git
+
+            # Enable and start Docker service
+            systemctl enable docker
+            systemctl start docker
+
+            # Pull and run your website container
+            docker pull ozyozyozy/ceg3120project3:latest
+            docker run -d --restart=always -p 80:80 ozyozyozy/ceg3120project3:latest
+
+            # Set hostname
+            echo "webserv1" > /etc/hostname
+  WebServ2Instance:
+    Type: 'AWS::EC2::Instance'
+    DependsOn: NATGateway
+    Properties:
+      ImageId: !FindInMap [AWSRegionAMI, !Ref "AWS::Region", HVM64]
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+        - Key: Name
+          Value: webserv2
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref SecurityGroup
+          AssociatePublicIpAddress: 'false'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref PrivateSubnet
+          PrivateIpAddress: 192.168.1.11 
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+
+            # Update package index
+            apt-get update -y
+
+            # Install Docker
+            apt-get install -y docker.io git
+
+            # Enable and start Docker service
+            systemctl enable docker
+            systemctl start docker
+
+            # Pull and run your website container
+            docker pull ozyozyozy/ceg3120project3:latest
+            docker run -d --restart=always -p 80:80 ozyozyozy/ceg3120project3:latest
+
+            # Set hostname
+            echo "webserv2" > /etc/hostname
+  WebServ3Instance:
+    Type: 'AWS::EC2::Instance'
+    DependsOn: NATGateway
+    Properties:
+      ImageId: !FindInMap [AWSRegionAMI, !Ref "AWS::Region", HVM64]
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+        - Key: Name
+          Value: webserv3
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref SecurityGroup
+          AssociatePublicIpAddress: 'false'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref PrivateSubnet
+          PrivateIpAddress: 192.168.1.12 
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+
+            # Update package index
+            apt-get update -y
+
+            # Install Docker
+            apt-get install -y docker.io git
+
+            # Enable and start Docker service
+            systemctl enable docker
+            systemctl start docker
+
+            # Pull and run your website container
+            docker pull ozyozyozy/ceg3120project3:latest
+            docker run -d --restart=always -p 80:80 ozyozyozy/ceg3120project3:latest
+
+            # Set hostname
+            echo "webserv3" > /etc/hostname
